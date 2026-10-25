@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cerdas Cermat Tingkat SD/MI Kecamatan Pulaulaut Selatan Tahun 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(-45deg, #1e3a8a, #3b82f6, #06b6d4, #1d4ed8);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            min-height: 100vh;
+            color: #fff;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 1rem;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+        }
+
+        .glass-btn {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .glass-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+        }
+
+        .glass-input {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+        .glass-input:focus {
+            outline: none;
+            border-color: #60a5fa;
+            background: rgba(255, 255, 255, 0.2);
+        }
+        .glass-input::placeholder { color: rgba(255, 255, 255, 0.6); }
+        .glass-input option { color: #000; }
+        
+        /* Select dropdown styling in swal */
+        .swal-select {
+            width: 80%;
+            padding: 0.75rem;
+            margin: 1rem auto;
+            border-radius: 0.5rem;
+            background: rgba(255, 255, 255, 0.9);
+            color: #1e3a8a;
+            font-size: 1rem;
+            border: none;
+            outline: none;
+            display: block;
+        }
+    </style>
+</head>
+<body class="antialiased flex flex-col items-center p-4">
+
+    <!-- HEADER -->
+    <div class="w-full max-w-6xl flex justify-between items-center glass p-4 mb-6">
+        <div class="font-bold text-lg md:text-xl text-white">
+            <i class="fas fa-graduation-cap mr-2"></i> CBT Cerdas Cermat
+        </div>
+        <div class="flex gap-2">
+            <button onclick="navigate('home')" class="glass-btn px-4 py-2 rounded text-white text-sm"><i class="fas fa-home"></i> Beranda</button>
+        </div>
+    </div>
+
+    <!-- MAIN CONTAINER -->
+    <div id="main-container" class="w-full max-w-6xl">
+        
+        <!-- HOME VIEW -->
+        <div id="view-home" class="glass p-8 text-center animate-fade-in">
+            <h1 class="text-3xl md:text-4xl font-bold mb-4 uppercase">Cerdas Cermat Tingkat SD/MI</h1>
+            <h2 class="text-xl md:text-2xl mb-8">Kecamatan Pulaulaut Selatan Tahun 2026</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <button onclick="loginPeserta()" class="glass-btn p-8 rounded-xl flex flex-col items-center">
+                    <i class="fas fa-user-graduate text-5xl mb-4 text-blue-300"></i>
+                    <span class="text-xl font-bold">Login Peserta</span>
+                </button>
+                <button onclick="loginProyektor()" class="glass-btn p-8 rounded-xl flex flex-col items-center">
+                    <i class="fas fa-projector text-5xl mb-4 text-green-300"></i>
+                    <span class="text-xl font-bold">Layar Proyektor</span>
+                </button>
+                <button onclick="loginAdmin()" class="glass-btn p-8 rounded-xl flex flex-col items-center">
+                    <i class="fas fa-user-shield text-5xl mb-4 text-red-300"></i>
+                    <span class="text-xl font-bold">Panel Admin</span>
+                </button>
+            </div>
+
+            <!-- Tabel Daftar Peserta -->
+            <div class="text-left bg-white/10 p-6 rounded-xl mt-8">
+                <h3 class="text-xl font-bold mb-4 border-b border-white/20 pb-2"><i class="fas fa-users"></i> Daftar Akses Peserta (Sekolah)</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead class="bg-white/20">
+                            <tr>
+                                <th class="p-3 text-left">Nama Sekolah / Tim</th>
+                                <th class="p-3 text-left">PIN Masuk</th>
+                                <th class="p-3 text-left">Kode Akses</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-home-peserta"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ADMIN DASHBOARD -->
+        <div id="view-admin" class="hidden glass p-6 animate-fade-in">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-6 border-b border-white/20 pb-4 gap-4">
+                <h2 class="text-2xl font-bold"><i class="fas fa-cogs"></i> Dashboard Admin</h2>
+                <button onclick="logoutAdmin()" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded font-bold"><i class="fas fa-sign-out-alt"></i> Keluar Admin</button>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+                <button onclick="adminNav('tim')" class="glass-btn py-3 px-2 rounded font-semibold text-sm md:text-base"><i class="fas fa-users"></i> Kelola Tim</button>
+                <button onclick="adminNav('soal')" class="glass-btn py-3 px-2 rounded font-semibold text-sm md:text-base"><i class="fas fa-list-ol"></i> Kelola Soal</button>
+                <button onclick="adminNav('password')" class="glass-btn py-3 px-2 rounded font-semibold text-sm md:text-base"><i class="fas fa-key"></i> Ganti Password</button>
+                <button onclick="adminNav('reset')" class="glass-btn py-3 px-2 rounded font-semibold text-sm md:text-base text-red-300"><i class="fas fa-trash-restore"></i> Reset Data</button>
+            </div>
+
+            <!-- Panel: Kelola Tim -->
+            <div id="admin-tim" class="admin-panel hidden">
+                <h3 class="text-xl font-bold mb-4">Manajemen Tim / Peserta</h3>
+                <form id="form-tambah-tim" class="flex flex-col md:flex-row gap-2 mb-4 bg-black/20 p-4 rounded">
+                    <input type="text" id="input-kode-tim" placeholder="Kode Akses (Misal: P11)" class="glass-input p-2 rounded flex-1" required>
+                    <input type="text" id="input-nama-tim" placeholder="Nama Sekolah (Misal: SDN 4)" class="glass-input p-2 rounded flex-[2]" required>
+                    <input type="text" id="input-pin-tim" placeholder="PIN Angka" class="glass-input p-2 rounded flex-1" required>
+                    <button type="submit" class="bg-blue-500 px-4 py-2 rounded font-bold hover:bg-blue-600"><i class="fas fa-plus"></i> Tambah</button>
+                </form>
+                <div class="overflow-x-auto">
+                    <table class="w-full bg-black/20 rounded">
+                        <thead class="bg-white/20">
+                            <tr>
+                                <th class="p-3 text-left">Sekolah</th>
+                                <th class="p-3 text-left">PIN</th>
+                                <th class="p-3 text-left">Kode</th>
+                                <th class="p-3">Skor</th>
+                                <th class="p-3">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-admin-tim"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Panel: Kelola Soal -->
+            <div id="admin-soal" class="admin-panel hidden">
+                <h3 class="text-xl font-bold mb-4">Daftar Soal (Total: <span id="total-soal">0</span>)</h3>
+                <div class="bg-black/20 p-4 rounded mb-4 overflow-y-auto max-h-[500px]" id="list-admin-soal">
+                    <!-- List Soal via JS -->
+                </div>
+            </div>
+
+            <!-- Panel: Ganti Password Admin -->
+            <div id="admin-password" class="admin-panel hidden">
+                <h3 class="text-xl font-bold mb-4 border-b border-white/20 pb-2"><i class="fas fa-lock"></i> Ganti Password / PIN Admin</h3>
+                <form id="form-ganti-password" class="bg-black/20 p-6 rounded-xl max-w-md mx-auto mt-6">
+                    <div class="mb-4">
+                        <label class="block text-sm mb-1 font-semibold text-gray-200">Password / PIN Lama</label>
+                        <input type="password" id="pass-lama" class="glass-input p-3 rounded w-full" placeholder="Masukkan PIN saat ini" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-sm mb-1 font-semibold text-gray-200">Password / PIN Baru</label>
+                        <input type="password" id="pass-baru" class="glass-input p-3 rounded w-full" placeholder="Masukkan PIN baru" required>
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-sm mb-1 font-semibold text-gray-200">Konfirmasi Password Baru</label>
+                        <input type="password" id="pass-konfirmasi" class="glass-input p-3 rounded w-full" placeholder="Ulangi PIN baru" required>
+                    </div>
+                    <button type="submit" class="bg-green-500 hover:bg-green-600 transition px-4 py-3 rounded text-white font-bold w-full shadow-lg shadow-green-500/30">
+                        <i class="fas fa-save mr-2"></i> Simpan Password Baru
+                    </button>
+                </form>
+            </div>
+
+            <!-- Panel: Reset -->
+            <div id="admin-reset" class="admin-panel hidden text-center py-10">
+                <i class="fas fa-exclamation-triangle text-6xl text-red-500 mb-4"></i>
+                <h3 class="text-2xl font-bold mb-2">Reset Seluruh Skor Ujian</h3>
+                <p class="mb-6 text-gray-300">Tindakan ini akan mengembalikan skor dan waktu semua peserta menjadi 0.</p>
+                <button onclick="resetSkor()" class="bg-red-600 hover:bg-red-700 px-6 py-3 rounded font-bold text-lg"><i class="fas fa-undo"></i> Reset Skor Sekarang</button>
+            </div>
+        </div>
+
+        <!-- PROYEKTOR / LIVE SCORE VIEW -->
+        <div id="view-proyektor" class="hidden glass p-8 animate-fade-in">
+            <div class="flex justify-between items-center mb-8">
+                <h1 class="text-3xl md:text-4xl font-bold uppercase tracking-wider text-yellow-300"><i class="fas fa-trophy"></i> Live Score Papan Peringkat</h1>
+                <button onclick="navigate('home')" class="bg-gray-700 px-4 py-2 rounded text-sm"><i class="fas fa-times"></i> Tutup</button>
+            </div>
+            <div id="leaderboard-container" class="space-y-4"></div>
+        </div>
+
+        <!-- CBT PESERTA VIEW -->
+        <div id="view-peserta" class="hidden glass p-6 md:p-10 animate-fade-in">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-6 border-b border-white/20 pb-4 gap-4">
+                <div>
+                    <h2 class="text-2xl md:text-3xl font-bold text-yellow-300" id="peserta-nama">Nama Tim</h2>
+                    <p class="text-sm font-mono mt-1">Kode Akses: <span id="peserta-kode"></span> | PIN: <span id="peserta-pin-display"></span></p>
+                </div>
+                <div class="text-center md:text-right">
+                    <div class="text-sm text-gray-300">Skor Sementara</div>
+                    <div class="text-4xl font-black text-green-400" id="peserta-skor">0</div>
+                    <button onclick="selesaiUjian()" class="text-xs bg-red-500/20 text-red-300 px-3 py-1 rounded mt-2 hover:bg-red-500 hover:text-white transition"><i class="fas fa-flag-checkered"></i> Selesai Ujian</button>
+                </div>
+            </div>
+            
+            <div id="cbt-area" class="bg-black/30 p-6 md:p-8 rounded-xl relative shadow-inner">
+                <div class="flex justify-between items-center mb-6">
+                    <span class="bg-blue-600 px-4 py-1.5 rounded-full text-sm font-bold shadow">Soal <span id="soal-aktif-num">1</span> dari 100</span>
+                    <span class="text-red-400 font-mono font-bold text-lg"><i class="fas fa-clock"></i> <span id="soal-timer">00:00</span></span>
+                </div>
+                
+                <h3 id="soal-teks" class="text-xl md:text-2xl mb-8 font-semibold leading-relaxed">Pertanyaan...</h3>
+                
+                <div id="opsi-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Opsi via JS -->
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Modal Edit Soal -->
+    <div id="modal-edit-soal" class="fixed inset-0 bg-black/80 flex justify-center items-center hidden z-50 p-4 backdrop-blur-sm">
+        <div class="glass p-6 rounded-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <h3 class="text-2xl font-bold mb-4 border-b border-white/20 pb-2">Edit Soal</h3>
+            <form id="form-edit-soal">
+                <input type="hidden" id="edit-soal-id">
+                <div class="mb-4">
+                    <label class="block text-sm mb-1">Pertanyaan</label>
+                    <textarea id="edit-soal-teks" class="glass-input p-2 rounded w-full h-24" required></textarea>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div><label class="block text-sm mb-1">Opsi A</label><input type="text" id="edit-opsi-a" class="glass-input p-2 rounded w-full" required></div>
+                    <div><label class="block text-sm mb-1">Opsi B</label><input type="text" id="edit-opsi-b" class="glass-input p-2 rounded w-full" required></div>
+                    <div><label class="block text-sm mb-1">Opsi C</label><input type="text" id="edit-opsi-c" class="glass-input p-2 rounded w-full" required></div>
+                    <div><label class="block text-sm mb-1">Opsi D</label><input type="text" id="edit-opsi-d" class="glass-input p-2 rounded w-full" required></div>
+                </div>
+                <div class="mb-6">
+                    <label class="block text-sm mb-1">Kunci Jawaban Benar</label>
+                    <select id="edit-jawaban" class="glass-input p-2 rounded w-full font-bold" required>
+                        <option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option>
+                    </select>
+                </div>
+                <div class="flex justify-end gap-2">
+                    <button type="button" onclick="tutupModalSoal()" class="bg-gray-500 px-4 py-2 rounded font-bold">Batal</button>
+                    <button type="submit" class="bg-blue-500 px-4 py-2 rounded font-bold">Simpan Soal</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Edit Tim -->
+    <div id="modal-edit-tim" class="fixed inset-0 bg-black/80 flex justify-center items-center hidden z-50 p-4 backdrop-blur-sm">
+        <div class="glass p-6 rounded-xl w-full max-w-md">
+            <h3 class="text-2xl font-bold mb-4 border-b border-white/20 pb-2">Edit Data Peserta</h3>
+            <form id="form-update-tim">
+                <input type="hidden" id="update-tim-id">
+                <div class="mb-4">
+                    <label class="block text-sm mb-1">Nama Sekolah / Tim</label>
+                    <input type="text" id="update-tim-nama" class="glass-input p-2 rounded w-full" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm mb-1">PIN Login</label>
+                    <input type="text" id="update-tim-pin" class="glass-input p-2 rounded w-full" required>
+                </div>
+                <div class="mb-6">
+                    <label class="block text-sm mb-1">Kode Akses</label>
+                    <input type="text" id="update-tim-kode" class="glass-input p-2 rounded w-full" required>
+                </div>
+                <div class="flex justify-end gap-2">
+                    <button type="button" onclick="tutupModalTim()" class="bg-gray-500 px-4 py-2 rounded font-bold">Batal</button>
+                    <button type="submit" class="bg-blue-500 px-4 py-2 rounded font-bold">Simpan Perubahan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // --- 1. STATE & DATA MANAGEMENT ---
+        const DB_KEY = 'cbt_cerdas_cermat_v7'; // Updated Key
+        const syncChannel = new BroadcastChannel('cbt_sync_channel');
+        
+        let db = JSON.parse(localStorage.getItem(DB_KEY));
+        
+        if (!db || !db.teams || db.teams.length === 0) {
+            db = {
+                settings: { adminPin: 'admin1993' },
+                teams: [
+                    { id: 't1', kode: 'P01', name: 'SDN 1 Tanjung Seloka', pin: '1234', score: 0, time: 0, currentSoalIndex: 0 },
+                    { id: 't2', kode: 'P02', name: 'SDN 2 Tanjung Seloka', pin: '1234', score: 0, time: 0, currentSoalIndex: 0 },
+                    { id: 't3', kode: 'P03', name: 'SDN 3 Tanjung Seloka', pin: '1234', score: 0, time: 0, currentSoalIndex: 0 },
+                    { id: 't4', kode: 'P04', name: 'SDN Tanjung Serudung', pin: '1234', score: 0, time: 0, currentSoalIndex: 0 },
+                    { id: 't5', kode: 'P05', name: 'MIN 2 Kotabaru', pin: '1234', score: 0, time: 0, currentSoalIndex: 0 },
+                    { id: 't6', kode: 'P06', name: 'SDN Ale-Ale', pin: '1234', score: 0, time: 0, currentSoalIndex: 0 },
+                    { id: 't7', kode: 'P07', name: 'SDN Sungai Bahim', pin: '1234', score: 0, time: 0, currentSoalIndex: 0 },
+                    { id: 't8', kode: 'P08', name: 'SDN Sungai Bulan', pin: '1234', score: 0, time: 0, currentSoalIndex: 0 },
+                    { id: 't9', kode: 'P09', name: 'SDN Teluk Sirih', pin: '1234', score: 0, time: 0, currentSoalIndex: 0 },
+                    { id: 't10', kode: 'P10', name: 'SDN Labuan Mas', pin: '1234', score: 0, time: 0, currentSoalIndex: 0 }
+                ],
+                questions: [
+                    {"id": "q1", "text": "Apakah lambang negara Republik Indonesia?", "options": {"A": "Bendera Merah Putih", "B": "Garuda Pancasila", "C": "Pohon Beringin", "D": "UUD 1945"}, "answer": "B"},
+                    {"id": "q2", "text": "Dasar negara Republik Indonesia adalah...", "options": {"A": "Pancasila", "B": "Bhinneka Tunggal Ika", "C": "Ketetapan MPR", "D": "Peraturan Presiden"}, "answer": "A"},
+                    {"id": "q3", "text": "Berapakah hasil penjumlahan dari 25 + 17?", "options": {"A": "32", "B": "40", "C": "42", "D": "52"}, "answer": "C"},
+                    {"id": "q4", "text": "Ibu kota Provinsi Kalimantan Selatan saat ini adalah...", "options": {"A": "Banjarmasin", "B": "Banjarbaru", "C": "Kotabaru", "D": "Martapura"}, "answer": "B"},
+                    {"id": "q5", "text": "Hewan yang berkembang biak dengan cara bertelur disebut...", "options": {"A": "Vivipar", "B": "Ovovivipar", "C": "Mamalia", "D": "Ovipar"}, "answer": "D"},
+                    {"id": "q6", "text": "Lawan kata (antonim) dari kata BESAR adalah...", "options": {"A": "Luas", "B": "Sempit", "C": "Kecil", "D": "Tinggi"}, "answer": "C"},
+                    {"id": "q7", "text": "Berapakah hasil perkalian 9 x 8?", "options": {"A": "72", "B": "81", "C": "64", "D": "70"}, "answer": "A"},
+                    {"id": "q8", "text": "Warna bendera bangsa Indonesia adalah...", "options": {"A": "Merah Putih", "B": "Putih Merah", "C": "Merah Berani", "D": "Putih Suci"}, "answer": "A"},
+                    {"id": "q9", "text": "Alat optik yang digunakan untuk melihat benda-benda berukuran sangat kecil seperti bakteri adalah...", "options": {"A": "Teleskop", "B": "Lup", "C": "Periskop", "D": "Mikroskop"}, "answer": "D"},
+                    {"id": "q10", "text": "Kemerdekaan bangsa Indonesia diperingati setiap tanggal...", "options": {"A": "17 Agustus", "B": "20 Mei", "C": "1 Juni", "D": "28 Oktober"}, "answer": "A"},
+                    {"id": "q11", "text": "Berapakah hasil pengurangan dari 100 - 35?", "options": {"A": "55", "B": "65", "C": "75", "D": "85"}, "answer": "B"},
+                    {"id": "q12", "text": "Organ tubuh manusia yang berfungsi memompa darah ke seluruh tubuh adalah...", "options": {"A": "Paru-paru", "B": "Ginjal", "C": "Hati", "D": "Jantung"}, "answer": "D"},
+                    {"id": "q13", "text": "Persamaan kata (sinonim) dari kata PANDAI adalah...", "options": {"A": "Cerdas", "B": "Bodoh", "C": "Rajin", "D": "Malas"}, "answer": "A"},
+                    {"id": "q14", "text": "Planet tempat tinggal makhluk hidup (manusia) di tata surya adalah...", "options": {"A": "Mars", "B": "Venus", "C": "Bumi", "D": "Jupiter"}, "answer": "C"},
+                    {"id": "q15", "text": "Berapakah jumlah sila dalam Pancasila?", "options": {"A": "3", "B": "4", "C": "5", "D": "6"}, "answer": "C"},
+                    {"id": "q16", "text": "Hasil dari 12 x 5 adalah...", "options": {"A": "50", "B": "55", "C": "60", "D": "65"}, "answer": "C"},
+                    {"id": "q17", "text": "Fasilitas umum seperti perpustakaan berfungsi sebagai tempat untuk...", "options": {"A": "Berolahraga", "B": "Membaca dan meminjam buku", "C": "Membeli kebutuhan sehari-hari", "D": "Menunggu bus"}, "answer": "B"},
+                    {"id": "q18", "text": "Bagian tumbuhan yang berfungsi menyerap air dan zat hara dari dalam tanah adalah...", "options": {"A": "Daun", "B": "Batang", "C": "Akar", "D": "Bunga"}, "answer": "C"},
+                    {"id": "q19", "text": "Lagu kebangsaan Indonesia Raya diciptakan oleh...", "options": {"A": "Ibu Sud", "B": "Kusbandi", "C": "C. Simanjuntak", "D": "W. R. Supratman"}, "answer": "D"},
+                    {"id": "q20", "text": "Hasil pembagian dari 144 ÷ 12 adalah...", "options": {"A": "10", "B": "12", "C": "14", "D": "16"}, "answer": "B"},
+                    {"id": "q21", "text": "Kegiatan menghasilkan barang atau jasa disebut kegiatan...", "options": {"A": "Konsumsi", "B": "Distribusi", "C": "Produksi", "D": "Transportasi"}, "answer": "C"},
+                    {"id": "q22", "text": "Pancaindra yang berfungsi sebagai alat pendengar adalah...", "options": {"A": "Mata", "B": "Telinga", "C": "Hidung", "D": "Kulit"}, "answer": "B"},
+                    {"id": "q23", "text": "Berapa jumlah hari dalam satu minggu?", "options": {"A": "5 hari", "B": "6 hari", "C": "7 hari", "D": "8 hari"}, "answer": "C"},
+                    {"id": "q24", "text": "Kata tanya yang digunakan untuk menanyakan tempat adalah...", "options": {"A": "Kapan", "B": "Siapa", "C": "Di mana", "D": "Mengapa"}, "answer": "C"},
+                    {"id": "q25", "text": "Hewan pemakan tumbuhan digolongkan sebagai...", "options": {"A": "Karnivor", "B": "Herbivor", "C": "Omnivor", "D": "Insektivor"}, "answer": "B"},
+                    {"id": "q26", "text": "Hasil dari 7² (7 pangkat 2) adalah...", "options": {"A": "14", "B": "49", "C": "21", "D": "77"}, "answer": "B"},
+                    {"id": "q27", "text": "Pencampuran warna merah dan kuning akan menghasilkan warna...", "options": {"A": "Hijau", "B": "Ungu", "C": "Oranye", "D": "Coklat"}, "answer": "C"},
+                    {"id": "q28", "text": "Presiden pertama Republik Indonesia adalah...", "options": {"A": "B.J. Habibie", "B": "Soeharto", "C": "Ir. Soekarno", "D": "Megawati Soekarnoputri"}, "answer": "C"},
+                    {"id": "q29", "text": "Alat yang digunakan untuk mengukur suhu tubuh adalah...", "options": {"A": "Barometer", "B": "Termometer", "C": "Dinamometer", "D": "Hygrometer"}, "answer": "B"},
+                    {"id": "q30", "text": "Berapa jumlah bulan dalam satu tahun kalender?", "options": {"A": "10 bulan", "B": "11 bulan", "C": "12 bulan", "D": "13 bulan"}, "answer": "C"},
+                    {"id": "q31", "text": "Lawan kata (antonim) dari RAJIN adalah...", "options": {"A": "Pintar", "B": "Malas", "C": "Cepat", "D": "Lambat"}, "answer": "B"},
+                    {"id": "q32", "text": "Sumber energi utama dan terbesar bagi bumi adalah...", "options": {"A": "Angin", "B": "Matahari", "C": "Air", "D": "Batu Bara"}, "answer": "B"},
+                    {"id": "q33", "text": "Hasil dari 250 + 150 adalah...", "options": {"A": "300", "B": "350", "C": "400", "D": "450"}, "answer": "C"},
+                    {"id": "q34", "text": "Sila Pancasila yang mengajarkan tentang pentingnya musyawarah adalah sila ke-...", "options": {"A": "Satu", "B": "Dua", "C": "Tiga", "D": "Empat"}, "answer": "D"},
+                    {"id": "q35", "text": "Dalam siklus metamorfosis kupu-kupu, setelah fase ulat akan menjadi...", "options": {"A": "Telur", "B": "Kepompong (Pupa)", "C": "Kupu-kupu muda", "D": "Berudu"}, "answer": "B"},
+                    {"id": "q36", "text": "Lawan kata (antonim) dari kata GELAP adalah...", "options": {"A": "Terang", "B": "Redup", "C": "Mendung", "D": "Hitam"}, "answer": "A"},
+                    {"id": "q37", "text": "Alat navigasi yang jarumnya selalu menunjuk ke arah utara dan selatan adalah...", "options": {"A": "Peta", "B": "Radar", "C": "Kompas", "D": "GPS"}, "answer": "C"},
+                    {"id": "q38", "text": "Hasil dari 15 x 4 adalah...", "options": {"A": "45", "B": "50", "C": "60", "D": "75"}, "answer": "C"},
+                    {"id": "q39", "text": "Secara geografis, letak Pulau Bali berada di sebelah ... Pulau Jawa.", "options": {"A": "Timur", "B": "Barat", "C": "Utara", "D": "Selatan"}, "answer": "A"},
+                    {"id": "q40", "text": "Kewajiban utama seorang siswa di sekolah adalah...", "options": {"A": "Bermain", "B": "Belajar", "C": "Bekerja", "D": "Berbelanja"}, "answer": "B"},
+                    {"id": "q41", "text": "Fungsi utama hidung sebagai salah satu pancaindra adalah untuk...", "options": {"A": "Melihat", "B": "Mendengar", "C": "Mengecap", "D": "Membau/Mencium"}, "answer": "D"},
+                    {"id": "q42", "text": "Hasil dari 81 ÷ 9 adalah...", "options": {"A": "7", "B": "8", "C": "9", "D": "10"}, "answer": "C"},
+                    {"id": "q43", "text": "Simbol atau lambang dari sila pertama Pancasila adalah...", "options": {"A": "Padi dan Kapas", "B": "Bintang", "C": "Rantai", "D": "Kepala Banteng"}, "answer": "B"},
+                    {"id": "q44", "text": "Pekerjaan atau profesi yang bertugas mendidik siswa di sekolah adalah...", "options": {"A": "Dokter", "B": "Polisi", "C": "Guru", "D": "Hakim"}, "answer": "C"},
+                    {"id": "q45", "text": "Peristiwa perubahan wujud benda dari cair menjadi padat disebut...", "options": {"A": "Mencair", "B": "Membeku", "C": "Menguap", "D": "Mengembun"}, "answer": "B"},
+                    {"id": "q46", "text": "Berapakah 3/4 dari 20?", "options": {"A": "10", "B": "12", "C": "15", "D": "18"}, "answer": "C"},
+                    {"id": "q47", "text": "Bahasa persatuan yang digunakan oleh bangsa Indonesia adalah...", "options": {"A": "Bahasa Inggris", "B": "Bahasa Daerah", "C": "Bahasa Jawa", "D": "Bahasa Indonesia"}, "answer": "D"},
+                    {"id": "q48", "text": "Alat pernapasan utama pada ikan adalah...", "options": {"A": "Paru-paru", "B": "Kulit", "C": "Trakea", "D": "Insang"}, "answer": "D"},
+                    {"id": "q49", "text": "Kegiatan menggunakan atau menghabiskan nilai guna suatu barang/jasa disebut...", "options": {"A": "Produksi", "B": "Distribusi", "C": "Konsumsi", "D": "Investasi"}, "answer": "C"},
+                    {"id": "q50", "text": "Berapakah jumlah sisi pada bangun datar segitiga?", "options": {"A": "2", "B": "3", "C": "4", "D": "5"}, "answer": "B"},
+                    {"id": "q51", "text": "Sikap saling menghormati antar pemeluk agama yang berbeda disebut...", "options": {"A": "Gotong Royong", "B": "Toleransi", "C": "Egois", "D": "Simpati"}, "answer": "B"},
+                    {"id": "q52", "text": "Hasil dari 125 x 8 adalah...", "options": {"A": "800", "B": "900", "C": "1000", "D": "1250"}, "answer": "C"},
+                    {"id": "q53", "text": "Persamaan kata (sinonim) dari kata LESTARI adalah...", "options": {"A": "Punah", "B": "Hancur", "C": "Terjaga", "D": "Berubah"}, "answer": "C"},
+                    {"id": "q54", "text": "Perubahan wujud benda dari cair menjadi gas disebut...", "options": {"A": "Membeku", "B": "Menguap", "C": "Menyublim", "D": "Mengkristal"}, "answer": "B"},
+                    {"id": "q55", "text": "Organisasi kerja sama negara-negara di kawasan Asia Tenggara adalah...", "options": {"A": "PBB", "B": "NATO", "C": "ASEAN", "D": "APEC"}, "answer": "C"},
+                    {"id": "q56", "text": "Kelipatan Persekutuan Terkecil (KPK) dari 6 dan 8 adalah...", "options": {"A": "12", "B": "18", "C": "24", "D": "48"}, "answer": "C"},
+                    {"id": "q57", "text": "Faktor Persekutuan Terbesar (FPB) dari 24 dan 36 adalah...", "options": {"A": "6", "B": "8", "C": "12", "D": "24"}, "answer": "C"},
+                    {"id": "q58", "text": "Panjang 1 kilometer (km) sama dengan ... meter.", "options": {"A": "10", "B": "100", "C": "1.000", "D": "10.000"}, "answer": "C"},
+                    {"id": "q59", "text": "Teks yang berisi petunjuk atau langkah-langkah melakukan sesuatu disebut teks...", "options": {"A": "Narasi", "B": "Deskripsi", "C": "Persuasi", "D": "Prosedur"}, "answer": "D"},
+                    {"id": "q60", "text": "Proklamasi Kemerdekaan Republik Indonesia dibacakan pada tahun...", "options": {"A": "1908", "B": "1928", "C": "1945", "D": "1965"}, "answer": "C"},
+                    {"id": "q61", "text": "Bagian tumbuhan yang menjadi tempat utama berlangsungnya proses fotosintesis adalah...", "options": {"A": "Akar", "B": "Batang", "C": "Daun", "D": "Bunga"}, "answer": "C"},
+                    {"id": "q62", "text": "Hasil penjumlahan bilangan desimal 2,5 + 3,75 adalah...", "options": {"A": "5,25", "B": "6,25", "C": "6,50", "D": "5,75"}, "answer": "B"},
+                    {"id": "q63", "text": "Garis khayal yang membagi bumi menjadi belahan utara dan selatan disebut garis...", "options": {"A": "Bujur", "B": "Khatulistiwa", "C": "Lintang Utara", "D": "Meridian"}, "answer": "B"},
+                    {"id": "q64", "text": "Satuan standar ukur untuk massa benda adalah...", "options": {"A": "Meter", "B": "Liter", "C": "Kilogram", "D": "Celcius"}, "answer": "C"},
+                    {"id": "q65", "text": "Tanda baca yang digunakan pada akhir kalimat tanya adalah...", "options": {"A": "Titik (.)", "B": "Koma (,)", "C": "Seru (!)", "D": "Tanya (?)"}, "answer": "D"},
+                    {"id": "q66", "text": "Salah satu contoh sumber energi yang dapat diperbarui (terbarukan) adalah...", "options": {"A": "Minyak Bumi", "B": "Batu Bara", "C": "Gas Alam", "D": "Sinar Matahari"}, "answer": "D"},
+                    {"id": "q67", "text": "Rumus untuk menghitung luas bangun datar persegi adalah...", "options": {"A": "Panjang x Lebar", "B": "Sisi x Sisi", "C": "1/2 x Alas x Tinggi", "D": "2 x (Panjang + Lebar)"}, "answer": "B"},
+                    {"id": "q68", "text": "Pencipta lagu kebangsaan Indonesia Raya adalah...", "options": {"A": "Ismail Marzuki", "B": "W. R. Supratman", "C": "L. Manik", "D": "Ibu Sud"}, "answer": "B"},
+                    {"id": "q69", "text": "Dampak dari rotasi bumi (perputaran bumi pada porosnya) adalah...", "options": {"A": "Perubahan musim", "B": "Gerhana bulan", "C": "Terjadinya siang dan malam", "D": "Pasang surut air laut"}, "answer": "C"},
+                    {"id": "q70", "text": "Salah satu hak anak di lingkungan sekolah adalah...", "options": {"A": "Mengerjakan PR", "B": "Mendapat pelajaran/pendidikan", "C": "Membersihkan kelas", "D": "Membayar uang kas"}, "answer": "B"},
+                    {"id": "q71", "text": "Hasil dari 3/5 + 1/5 adalah...", "options": {"A": "4/10", "B": "4/5", "C": "2/5", "D": "2/10"}, "answer": "B"},
+                    {"id": "q72", "text": "Hewan pemakan segala (tumbuhan dan daging) digolongkan sebagai...", "options": {"A": "Herbivor", "B": "Karnivor", "C": "Omnivor", "D": "Insektivor"}, "answer": "C"},
+                    {"id": "q73", "text": "Pahlawan nasional perempuan asal Jepara yang memperjuangkan emansipasi wanita adalah...", "options": {"A": "Cut Nyak Dien", "B": "R.A. Kartini", "C": "Dewi Sartika", "D": "Martha Christina Tiahahu"}, "answer": "B"},
+                    {"id": "q74", "text": "Penulisan kata baku yang benar di bawah ini adalah...", "options": {"A": "Apotik", "B": "Apotek", "C": "Appotik", "D": "Apothec"}, "answer": "B"},
+                    {"id": "q75", "text": "Rumus keliling persegi panjang adalah...", "options": {"A": "2 x (p + l)", "B": "p x l", "C": "4 x sisi", "D": "1/2 x p x l"}, "answer": "A"},
+                    {"id": "q76", "text": "Sungai terpanjang di Indonesia yang terletak di Pulau Kalimantan adalah...", "options": {"A": "Sungai Musi", "B": "Sungai Bengawan Solo", "C": "Sungai Mahakam", "D": "Sungai Kapuas"}, "answer": "D"},
+                    {"id": "q77", "text": "Peristiwa perkaratan pada besi merupakan contoh dari perubahan...", "options": {"A": "Fisika", "B": "Biologi", "C": "Kimia", "D": "Wujud"}, "answer": "C"},
+                    {"id": "q78", "text": "Lembaga negara yang bertugas membuat undang-undang bersama Presiden adalah...", "options": {"A": "DPR", "B": "MA", "C": "MK", "D": "BPK"}, "answer": "A"},
+                    {"id": "q79", "text": "Hasil dari 15² (15 pangkat 2) adalah...", "options": {"A": "125", "B": "225", "C": "250", "D": "325"}, "answer": "B"},
+                    {"id": "q80", "text": "Kata dasar dari kata 'berlarian' adalah...", "options": {"A": "Larian", "B": "Berlari", "C": "Lari", "D": "Ria"}, "answer": "C"},
+                    {"id": "q81", "text": "Planet terbesar di tata surya kita adalah...", "options": {"A": "Bumi", "B": "Mars", "C": "Saturnus", "D": "Jupiter"}, "answer": "D"},
+                    {"id": "q82", "text": "Kegiatan menyalurkan barang dari produsen ke konsumen disebut...", "options": {"A": "Produksi", "B": "Distribusi", "C": "Konsumsi", "D": "Investasi"}, "answer": "B"},
+                    {"id": "q83", "text": "Besar sudut siku-siku adalah...", "options": {"A": "45 derajat", "B": "90 derajat", "C": "180 derajat", "D": "360 derajat"}, "answer": "B"},
+                    {"id": "q84", "text": "Arti dari semboyan Bhinneka Tunggal Ika adalah...", "options": {"A": "Bersatu kita teguh bercerai kita runtuh", "B": "Maju tak gentar membela yang benar", "C": "Berbeda-beda tetapi tetap satu jua", "D": "Satu nusa satu bangsa satu bahasa"}, "answer": "C"},
+                    {"id": "q85", "text": "Organ pernapasan utama pada manusia adalah...", "options": {"A": "Jantung", "B": "Hati", "C": "Ginjal", "D": "Paru-paru"}, "answer": "D"},
+                    {"id": "q86", "text": "Berapakah 20% dari 150?", "options": {"A": "15", "B": "20", "C": "30", "D": "45"}, "answer": "C"},
+                    {"id": "q87", "text": "Tanda baca koma (,) di dalam kalimat berfungsi untuk...", "options": {"A": "Mengakhiri kalimat", "B": "Memerinci suatu daftar/perincian", "C": "Menunjukkan kalimat seru", "D": "Mengapit kutipan langsung"}, "answer": "B"},
+                    {"id": "q88", "text": "Kerajaan bercorak Buddha terbesar yang pernah berdiri di Pulau Sumatra adalah...", "options": {"A": "Kutai", "B": "Tarumanegara", "C": "Majapahit", "D": "Sriwijaya"}, "answer": "D"},
+                    {"id": "q89", "text": "Salah satu kewajiban sebagai warga negara Indonesia adalah...", "options": {"A": "Mendapat perlindungan hukum", "B": "Memilih dalam Pemilu", "C": "Mematuhi hukum dan aturan", "D": "Mendapat pendidikan gratis"}, "answer": "C"},
+                    {"id": "q90", "text": "Rumus untuk menghitung volume bangun ruang kubus adalah...", "options": {"A": "s + s + s", "B": "s x s x s (s³)", "C": "p x l x t", "D": "2 x s x s"}, "answer": "B"},
+                    {"id": "q91", "text": "Benda yang dapat menghantarkan panas atau listrik dengan baik disebut...", "options": {"A": "Isolator", "B": "Konduktor", "C": "Radiator", "D": "Generator"}, "answer": "B"},
+                    {"id": "q92", "text": "Benua terluas di dunia adalah Benua...", "options": {"A": "Eropa", "B": "Afrika", "C": "Amerika", "D": "Asia"}, "answer": "D"},
+                    {"id": "q93", "text": "Lawan kata (antonim) dari kata OPTIMIS adalah...", "options": {"A": "Yakin", "B": "Pesimis", "C": "Gembira", "D": "Sedih"}, "answer": "B"},
+                    {"id": "q94", "text": "Pergerakan bumi mengelilingi matahari disebut...", "options": {"A": "Rotasi", "B": "Revolusi", "C": "Evolusi", "D": "Gravitasi"}, "answer": "B"},
+                    {"id": "q95", "text": "Hasil dari 7/8 - 3/8 adalah...", "options": {"A": "4/8 (atau 1/2)", "B": "3/8", "C": "5/8", "D": "10/8"}, "answer": "A"},
+                    {"id": "q96", "text": "Angklung adalah alat musik tradisional yang berasal dari daerah...", "options": {"A": "Jawa Tengah", "B": "Jawa Timur", "C": "Jawa Barat", "D": "Bali"}, "answer": "C"},
+                    {"id": "q97", "text": "Perpindahan panas dari sinar matahari sampai ke bumi tanpa melalui zat perantara disebut...", "options": {"A": "Konduksi", "B": "Konveksi", "C": "Radiasi", "D": "Isolasi"}, "answer": "C"},
+                    {"id": "q98", "text": "Keadilan sosial bagi seluruh rakyat Indonesia merupakan bunyi sila ke-...", "options": {"A": "Dua", "B": "Tiga", "C": "Empat", "D": "Lima"}, "answer": "D"},
+                    {"id": "q99", "text": "Hasil perkalian desimal dari 1,2 x 10 adalah...", "options": {"A": "1,2", "B": "12", "C": "120", "D": "0,12"}, "answer": "B"},
+                    {"id": "q100", "text": "Kemampuan kelelawar mengetahui arah dan letak benda dalam keadaan gelap disebut...", "options": {"A": "Mimikri", "B": "Autotomi", "C": "Ekolokasi", "D": "Kamuflase"}, "answer": "C"}
+                ]
+            };
+            saveDb();
+        }
+
+        function saveDb() {
+            localStorage.setItem(DB_KEY, JSON.stringify(db));
+            syncChannel.postMessage('UPDATE');
+            renderAll();
+        }
+
+        syncChannel.onmessage = (e) => {
+            if(e.data === 'UPDATE') {
+                db = JSON.parse(localStorage.getItem(DB_KEY));
+                renderAll();
+                if(sessionStorage.getItem('activeTeam')) updateUIpeserta();
+            }
+        };
+
+        // --- 2. NAVIGATION ---
+        function navigate(view) {
+            ['home', 'admin', 'proyektor', 'peserta'].forEach(v => {
+                document.getElementById(`view-${v}`).classList.add('hidden');
+            });
+            document.getElementById(`view-${view}`).classList.remove('hidden');
+            renderAll();
+        }
+
+        function renderAll() {
+            renderHome();
+            if(!document.getElementById('view-admin').classList.contains('hidden')) renderAdmin();
+            if(!document.getElementById('view-proyektor').classList.contains('hidden')) renderLeaderboard();
+        }
+
+        // --- 3. HOME & AUTHENTICATION ---
+        function renderHome() {
+            const tbody = document.getElementById('table-home-peserta');
+            tbody.innerHTML = '';
+            db.teams.forEach(t => {
+                tbody.innerHTML += `
+                    <tr class="border-b border-white/10 hover:bg-white/5">
+                        <td class="p-3 font-semibold">${t.name}</td>
+                        <td class="p-3 font-mono text-blue-300 font-bold">${t.pin}</td>
+                        <td class="p-3 font-mono text-yellow-300 font-bold">${t.kode}</td>
+                    </tr>`;
+            });
+        }
+
+        function loginPeserta() {
+            let options = '<option value="" disabled selected>-- Pilih Nama Sekolah / Tim --</option>';
+            db.teams.forEach(t => {
+                options += `<option value="${t.id}">${t.name}</option>`;
+            });
+
+            Swal.fire({
+                title: 'Login Peserta',
+                html: `
+                    <select id="swal-team-id" class="swal-select">
+                        ${options}
+                    </select>
+                    <input id="swal-pin" type="password" class="swal2-input" placeholder="Masukkan PIN Login">
+                `,
+                confirmButtonText: 'Mulai Ujian',
+                focusConfirm: false,
+                background: '#1e3a8a', color: '#fff',
+                preConfirm: () => {
+                    const teamId = document.getElementById('swal-team-id').value;
+                    const pin = document.getElementById('swal-pin').value;
+                    
+                    if (!teamId) {
+                        Swal.showValidationMessage('Silakan pilih Nama Sekolah terlebih dahulu!');
+                        return false;
+                    }
+                    
+                    const team = db.teams.find(t => t.id === teamId && t.pin === pin);
+                    if (!team) {
+                        Swal.showValidationMessage('Nama Sekolah atau PIN salah!');
+                        return false;
+                    }
+                    
+                    return team;
+                }
+            }).then((res) => {
+                if (res.isConfirmed) {
+                    sessionStorage.setItem('activeTeam', res.value.id);
+                    navigate('peserta');
+                    startCBT();
+                }
+            });
+        }
+
+        function loginAdmin() {
+            Swal.fire({
+                title: 'Login Admin', input: 'password', inputPlaceholder: 'Masukkan PIN Admin',
+                confirmButtonText: 'Masuk', background: '#1e3a8a', color: '#fff'
+            }).then(res => {
+                if (res.isConfirmed) {
+                    if (res.value === db.settings.adminPin) { navigate('admin'); adminNav('tim'); }
+                    else { Swal.fire('Error', 'PIN Salah', 'error'); }
+                }
+            });
+        }
+
+        function loginProyektor() { navigate('proyektor'); }
+        function logoutAdmin() { navigate('home'); }
+
+        // --- 4. ADMIN DASHBOARD ---
+        function adminNav(panel) {
+            document.querySelectorAll('.admin-panel').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`admin-${panel}`).classList.remove('hidden');
+        }
+
+        // Kelola Tim
+        function renderAdmin() {
+            const tbody = document.getElementById('table-admin-tim');
+            tbody.innerHTML = '';
+            db.teams.forEach(t => {
+                tbody.innerHTML += `
+                    <tr class="border-b border-white/10">
+                        <td class="p-3">${t.name}</td>
+                        <td class="p-3 font-mono">${t.pin}</td>
+                        <td class="p-3 font-mono">${t.kode}</td>
+                        <td class="p-3 font-bold text-green-400">${t.score}</td>
+                        <td class="p-3 flex gap-2">
+                            <button onclick="bukaEditTim('${t.id}')" class="bg-yellow-500 hover:bg-yellow-600 px-3 py-1 rounded text-white text-sm"><i class="fas fa-edit"></i> Edit</button>
+                            <button onclick="hapusTim('${t.id}')" class="bg-red-500 hover:bg-red-600 px-3 py-1 rounded text-white text-sm"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>`;
+            });
+            renderSoalAdmin();
+        }
+
+        document.getElementById('form-tambah-tim').addEventListener('submit', e => {
+            e.preventDefault();
+            db.teams.push({
+                id: 't' + Date.now(),
+                kode: document.getElementById('input-kode-tim').value,
+                name: document.getElementById('input-nama-tim').value,
+                pin: document.getElementById('input-pin-tim').value,
+                score: 0, time: 0, currentSoalIndex: 0
+            });
+            saveDb();
+            e.target.reset();
+            Swal.fire({toast:true, position:'top-end', icon:'success', title:'Tersimpan', showConfirmButton:false, timer:1500});
+        });
+
+        function hapusTim(id) {
+            Swal.fire({ title: 'Hapus Tim?', icon: 'warning', showCancelButton: true, confirmButtonText: 'Hapus' })
+            .then(res => { if(res.isConfirmed){ db.teams = db.teams.filter(t => t.id !== id); saveDb(); }});
+        }
+
+        function bukaEditTim(id) {
+            const t = db.teams.find(x => x.id === id);
+            document.getElementById('update-tim-id').value = t.id;
+            document.getElementById('update-tim-kode').value = t.kode;
+            document.getElementById('update-tim-nama').value = t.name;
+            document.getElementById('update-tim-pin').value = t.pin;
+            document.getElementById('modal-edit-tim').classList.remove('hidden');
+        }
+        function tutupModalTim() { document.getElementById('modal-edit-tim').classList.add('hidden'); }
+        
+        document.getElementById('form-update-tim').addEventListener('submit', e => {
+            e.preventDefault();
+            const id = document.getElementById('update-tim-id').value;
+            const t = db.teams.find(x => x.id === id);
+            t.kode = document.getElementById('update-tim-kode').value;
+            t.name = document.getElementById('update-tim-nama').value;
+            t.pin = document.getElementById('update-tim-pin').value;
+            saveDb();
+            tutupModalTim();
+            Swal.fire({toast:true, position:'top-end', icon:'success', title:'Diperbarui', showConfirmButton:false, timer:1500});
+        });
+
+        // Ganti Password Admin
+        document.getElementById('form-ganti-password').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const lama = document.getElementById('pass-lama').value;
+            const baru = document.getElementById('pass-baru').value;
+            const konfirm = document.getElementById('pass-konfirmasi').value;
+
+            if (lama !== db.settings.adminPin) {
+                Swal.fire('Gagal', 'Password/PIN lama yang Anda masukkan salah!', 'error');
+                return;
+            }
+            if (baru !== konfirm) {
+                Swal.fire('Gagal', 'Konfirmasi Password/PIN baru tidak sama!', 'error');
+                return;
+            }
+
+            db.settings.adminPin = baru;
+            saveDb();
+            document.getElementById('form-ganti-password').reset();
+            Swal.fire('Sukses', 'Password/PIN Admin berhasil diperbarui!', 'success');
+        });
+
+        // Kelola Soal
+        function renderSoalAdmin() {
+            document.getElementById('total-soal').innerText = db.questions.length;
+            const list = document.getElementById('list-admin-soal');
+            list.innerHTML = '';
+            db.questions.forEach((q, idx) => {
+                list.innerHTML += `
+                    <div class="bg-white/5 p-4 rounded mb-2 border-l-4 border-blue-500">
+                        <div class="flex justify-between items-start">
+                            <div class="font-semibold text-lg mb-2">Soal ${idx + 1}: ${q.text}</div>
+                            <button onclick="bukaEditSoal('${q.id}')" class="bg-yellow-500 hover:bg-yellow-600 px-3 py-1 rounded text-sm text-white shrink-0"><i class="fas fa-edit"></i> Edit</button>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2 text-sm text-gray-300">
+                            <div class="${q.answer==='A'?'text-green-400 font-bold':''}"><span class="badge">A</span> ${q.options.A}</div>
+                            <div class="${q.answer==='B'?'text-green-400 font-bold':''}"><span class="badge">B</span> ${q.options.B}</div>
+                            <div class="${q.answer==='C'?'text-green-400 font-bold':''}"><span class="badge">C</span> ${q.options.C}</div>
+                            <div class="${q.answer==='D'?'text-green-400 font-bold':''}"><span class="badge">D</span> ${q.options.D}</div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function bukaEditSoal(id) {
+            const q = db.questions.find(x => x.id === id);
+            document.getElementById('edit-soal-id').value = q.id;
+            document.getElementById('edit-soal-teks').value = q.text;
+            document.getElementById('edit-opsi-a').value = q.options.A;
+            document.getElementById('edit-opsi-b').value = q.options.B;
+            document.getElementById('edit-opsi-c').value = q.options.C;
+            document.getElementById('edit-opsi-d').value = q.options.D;
+            document.getElementById('edit-jawaban').value = q.answer;
+            document.getElementById('modal-edit-soal').classList.remove('hidden');
+        }
+        function tutupModalSoal() { document.getElementById('modal-edit-soal').classList.add('hidden'); }
+        
+        document.getElementById('form-edit-soal').addEventListener('submit', e => {
+            e.preventDefault();
+            const id = document.getElementById('edit-soal-id').value;
+            const q = db.questions.find(x => x.id === id);
+            q.text = document.getElementById('edit-soal-teks').value;
+            q.options.A = document.getElementById('edit-opsi-a').value;
+            q.options.B = document.getElementById('edit-opsi-b').value;
+            q.options.C = document.getElementById('edit-opsi-c').value;
+            q.options.D = document.getElementById('edit-opsi-d').value;
+            q.answer = document.getElementById('edit-jawaban').value;
+            saveDb();
+            tutupModalSoal();
+            Swal.fire({toast:true, position:'top-end', icon:'success', title:'Soal Disimpan', showConfirmButton:false, timer:1500});
+        });
+
+        function resetSkor() {
+            Swal.fire({ title: 'Yakin Reset?', text: 'Skor semua tim akan jadi 0!', icon: 'warning', showCancelButton: true, confirmButtonColor: '#d33' })
+            .then((res) => {
+                if (res.isConfirmed) {
+                    db.teams.forEach(t => { t.score = 0; t.time = 0; t.currentSoalIndex = 0; });
+                    saveDb();
+                    Swal.fire('Direset!', 'Skor telah kembali 0.', 'success');
+                }
+            });
+        }
+
+        // --- 5. CBT PESERTA ---
+        let startTime;
+        let cbtInterval;
+
+        function startCBT() {
+            const teamId = sessionStorage.getItem('activeTeam');
+            if(!teamId) return navigate('home');
+            updateUIpeserta();
+            renderSoalPeserta();
+            
+            startTime = Date.now();
+            clearInterval(cbtInterval);
+            cbtInterval = setInterval(() => {
+                const elapsed = Math.floor((Date.now() - startTime)/1000);
+                const m = String(Math.floor(elapsed/60)).padStart(2, '0');
+                const s = String(elapsed%60).padStart(2, '0');
+                document.getElementById('soal-timer').innerText = `${m}:${s}`;
+            }, 1000);
+        }
+
+        function updateUIpeserta() {
+            const team = db.teams.find(t => t.id === sessionStorage.getItem('activeTeam'));
+            if(!team) return;
+            document.getElementById('peserta-nama').innerText = team.name;
+            document.getElementById('peserta-kode').innerText = team.kode;
+            document.getElementById('peserta-pin-display').innerText = team.pin;
+            document.getElementById('peserta-skor').innerText = team.score;
+        }
+
+        function renderSoalPeserta() {
+            const team = db.teams.find(t => t.id === sessionStorage.getItem('activeTeam'));
+            if(team.currentSoalIndex >= db.questions.length) return selesaiUjian(true);
+            
+            const q = db.questions[team.currentSoalIndex];
+            document.getElementById('soal-aktif-num').innerText = team.currentSoalIndex + 1;
+            document.getElementById('soal-teks').innerText = q.text;
+            
+            const cont = document.getElementById('opsi-container');
+            cont.innerHTML = '';
+            ['A','B','C','D'].forEach(opt => {
+                cont.innerHTML += `
+                    <button onclick="jawab('${opt}')" class="glass-btn p-4 rounded-xl text-left hover:bg-blue-600/50 focus:outline-none transition group">
+                        <span class="inline-block bg-blue-800 text-white font-bold w-8 h-8 rounded-full text-center leading-8 mr-3 group-hover:bg-white group-hover:text-blue-800">${opt}</span>
+                        ${q.options[opt]}
+                    </button>
+                `;
+            });
+        }
+
+        window.jawab = function(jawaban) {
+            const team = db.teams.find(t => t.id === sessionStorage.getItem('activeTeam'));
+            const q = db.questions[team.currentSoalIndex];
+            
+            if(jawaban === q.answer) {
+                team.score += 10;
+                Swal.fire({toast:true, position:'top', icon:'success', title:'BENAR! +10', showConfirmButton:false, timer:1000});
+            } else {
+                Swal.fire({toast:true, position:'top', icon:'error', title:'SALAH!', showConfirmButton:false, timer:1000});
+            }
+            
+            team.currentSoalIndex++;
+            team.time = Date.now() - startTime;
+            saveDb(); // Ini trigger sinkronisasi
+            
+            setTimeout(() => { renderSoalPeserta(); }, 1000);
+        }
+
+        window.selesaiUjian = function(auto = false) {
+            clearInterval(cbtInterval);
+            Swal.fire('Ujian Selesai!', 'Skor Anda telah terekam.', 'success').then(() => {
+                sessionStorage.removeItem('activeTeam');
+                navigate('home');
+            });
+        }
+
+        // --- 6. LIVE SCORE PROYEKTOR ---
+        function renderLeaderboard() {
+            const cont = document.getElementById('leaderboard-container');
+            cont.innerHTML = '';
+            const sorted = [...db.teams].sort((a,b) => b.score - a.score || a.time - b.time);
+            
+            sorted.forEach((t, i) => {
+                const medal = i===0 ? '🏆' : i===1 ? '🥈' : i===2 ? '🥉' : `${i+1}.`;
+                const isTop = i===0 ? 'bg-yellow-500 text-black scale-105 shadow-xl shadow-yellow-500/30' : 'bg-white/10';
+                cont.innerHTML += `
+                    <div class="${isTop} p-5 rounded-2xl flex justify-between items-center transition-all duration-500 border border-white/20">
+                        <div class="flex items-center gap-6">
+                            <span class="text-4xl font-bold w-12 text-center">${medal}</span>
+                            <div>
+                                <div class="text-2xl font-bold">${t.name}</div>
+                                <div class="text-sm font-mono opacity-80">Kode: ${t.kode}</div>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-4xl font-black">${t.score} <span class="text-lg font-normal">Poin</span></div>
+                            <div class="text-sm opacity-80"><i class="fas fa-stopwatch"></i> ${(t.time/1000).toFixed(1)}s</div>
+                        </div>
+                    </div>`;
+            });
+        }
+
+        // Inisialisasi awal
+        navigate('home');
+
+    </script>
+</body>
+</html>
